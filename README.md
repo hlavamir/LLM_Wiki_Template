@@ -2,9 +2,11 @@
 
 A ready-to-use scaffold for the **LLM Wiki** pattern: an agent-maintained, persistent knowledge base where you curate sources and ask questions, and the agent compiles and keeps a markdown wiki current — instead of re-deriving answers from raw documents on every query.
 
+## Quick Start Guide
+
 Drop [AGENTS.md](AGENTS.md) (and [CLAUDE.md](CLAUDE.md), a one-line pointer for Claude Code) into an empty folder, start an agent session there, and it bootstraps the rest.
 
-## Credit
+## Credits
 
 This is an implementation of Andrej Karpathy's **LLM Wiki** pattern, described in his gist: [gist.github.com/karpathy/442a6bf555914893e9891c11519de94f](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f). The core idea, the three-layer split, and the guiding philosophy below are his — this repo turns that description into a concrete, reusable schema file plus a few operational additions covered below.
 
