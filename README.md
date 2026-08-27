@@ -4,7 +4,10 @@ A ready-to-use scaffold for the **LLM Wiki** pattern: an agent-maintained, persi
 
 ## Quick Start Guide
 
-Drop [AGENTS.md](AGENTS.md) (and [CLAUDE.md](CLAUDE.md), a one-line pointer for Claude Code) into an empty folder, start an agent session there, and it bootstraps the rest.
+Two ways to start, both land in the same wizard:
+
+- **Copy the files.** Drop [AGENTS.md](AGENTS.md) (and [CLAUDE.md](CLAUDE.md), a one-line pointer for Claude Code) into an empty folder, start an agent session there, and it bootstraps the rest.
+- **Paste the link.** Create an empty folder, start an agent session there (Claude Code, Codex CLI, etc.), and paste this repo's URL as your first message — e.g. `https://github.com/hlavamir/LLM_Wiki_Template` — then hit enter. The agent fetches `AGENTS.md` and `CLAUDE.md` from GitHub, writes them into the folder, and runs the same first-run wizard. (This works because `AGENTS.md` itself carries the instruction — see "Bootstrapping from a link" in that file.)
 
 ## Credits
 
@@ -27,6 +30,7 @@ The gist describes the pattern; this repo is a distributable schema built on top
 | Addition | What it does | Why |
 |---|---|---|
 | **First-run bootstrap wizard** | Scaffolds all folders and files automatically, then asks two setup questions (project name/description, Obsidian vs GitHub vs both) before doing anything else. | Turns the pattern from "a description to implement" into a template you can copy and run. |
+| **Bootstrap from a link** | Paste this repo's GitHub URL into an agent session in an empty folder; the agent fetches `AGENTS.md`/`CLAUDE.md` itself and runs the same wizard — no manual file copy needed. | Gets a new wiki running in one pasted link instead of a download-and-copy step. |
 | **`link_style` (wikilinks vs. markdown)** | A single frontmatter setting that switches every cross-link between Obsidian-style `[[wikilinks]]` and relative markdown links, decided once at setup. | Makes the same schema work whether the wiki is read in Obsidian, on GitHub, or both. |
 | **Multi-agent write lock** (`wiki.lock`) | A plaintext lock file with atomic create, staleness takeover, and a bounded retry loop, so two agent sessions can't write at once. | The original describes a single-user system; this template is built to be safe when several agents (parallel sessions, different machines) touch the same wiki. |
 | **Standing rules** | Ten explicit rules covering conflict resolution ("newer information wins"), tone, secrets handling, one-page-per-thing, and more. | Encodes judgment calls once instead of re-deciding them per session. |

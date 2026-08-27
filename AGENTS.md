@@ -6,7 +6,7 @@ modified: {{YYYY-MM-DD}}
 link_style: "{{wikilinks|markdown}}" # set at first run — see 'First run' below
 ---
 
-<!-- TEMPLATE FILE. This is the full schema, read natively by most coding agents (Codex CLI, Gemini CLI, Aider, Zed, Devin, and others) via the AGENTS.md convention. Claude Code reads CLAUDE.md instead of AGENTS.md, so a one-line pointer file ships alongside this one for that purpose — see the Notes section below if you need a similar pointer for another tool (Cursor, Windsurf, Copilot, …). Copy this AGENTS.md and CLAUDE.md into a dedicated, empty folder, then start an agent session there and ask it to read this schema. On first run the agent fills the placeholders above, scaffolds the wiki, and asks one setup question. -->
+<!-- TEMPLATE FILE. This is the full schema, read natively by most coding agents (Codex CLI, Gemini CLI, Aider, Zed, Devin, and others) via the AGENTS.md convention. Claude Code reads CLAUDE.md instead of AGENTS.md, so a one-line pointer file ships alongside this one for that purpose — see the Notes section below if you need a similar pointer for another tool (Cursor, Windsurf, Copilot, …). Copy this AGENTS.md and CLAUDE.md into a dedicated, empty folder, then start an agent session there and ask it to read this schema — or, in that empty folder, just paste this repo's GitHub link into the chat (see 'Bootstrapping from a link' below) and the agent will fetch the two files itself. On first run the agent fills the placeholders above, scaffolds the wiki, and asks one setup question. -->
 
 # LLM Wiki — Schema
 
@@ -15,6 +15,26 @@ This folder is an **LLM-maintained knowledge wiki**. Any agent working here **re
 The wiki is a persistent, compounding knowledge base: knowledge is **compiled once and kept current**, not re-derived on every query. The human curates sources and asks questions; the agent owns and maintains the wiki.
 
 **About this wiki:** {{PROJECT_ONE_LINE}}   <!-- one-line purpose, set at first run -->
+
+---
+
+## Bootstrapping from a link (no local files yet)
+
+You may be reading this file because a user pasted a bare GitHub URL to this template as their entire first message, in an empty working directory that has **no `AGENTS.md`/`CLAUDE.md` on disk yet** — you got here by fetching that URL, not by reading a local file. If that's the situation, do this before anything else:
+
+1. **Normalize the URL** to `owner`, `repo`, and `branch`:
+   - `https://github.com/<owner>/<repo>` → no branch given, use the repo's default branch.
+   - `https://github.com/<owner>/<repo>/tree/<branch>` → branch given explicitly.
+   - `https://github.com/<owner>/<repo>.git` → no branch given, use the repo's default branch.
+   - When no branch is given, fetch `https://api.github.com/repos/<owner>/<repo>` and read `default_branch` (fall back to `main`, then `master`, if that call fails).
+2. **Fetch and write two files**, verbatim and unmodified, into the current directory:
+   - `https://raw.githubusercontent.com/<owner>/<repo>/<branch>/AGENTS.md` → `./AGENTS.md`
+   - `https://raw.githubusercontent.com/<owner>/<repo>/<branch>/CLAUDE.md` → `./CLAUDE.md`
+3. Tell the user in one line what you fetched and from where, then continue immediately into **First run — bootstrap & setup** below — you now have a local `AGENTS.md`, so proceed exactly as if you'd read it from disk.
+
+Don't clone the whole repo, and don't carry over its `.git`, `README.md`, or `LICENSE` — this wiki is a fresh instance of the schema, not a fork of the template repo.
+
+If `AGENTS.md`/`CLAUDE.md` are already on disk in this folder, skip this section entirely.
 
 ---
 
