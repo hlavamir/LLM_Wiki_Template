@@ -4,10 +4,15 @@ A ready-to-use scaffold for the **LLM Wiki** pattern: an agent-maintained, persi
 
 ## Quick Start Guide
 
-Two ways to start, both land in the same wizard:
+Pick **one** of the two options below — both land in the same first-run wizard.
 
-- **Copy the files.** Drop [AGENTS.md](AGENTS.md) (and [CLAUDE.md](CLAUDE.md), a one-line pointer for Claude Code) into an empty folder, start an agent session there, and it bootstraps the rest.
-- **Paste the link.** Create an empty folder, start an agent session there (Claude Code, Codex CLI, etc.), and paste this repo's URL as your first message — e.g. `https://github.com/hlavamir/LLM_Wiki_Template` — then hit enter. The agent fetches `AGENTS.md` and `CLAUDE.md` from GitHub, writes them into the folder, and runs the same first-run wizard. (This works because `AGENTS.md` itself carries the instruction — see "Bootstrapping from a link" in that file.)
+### Option A: paste the link
+
+Create an empty folder, start an agent session there (Claude Code, Codex CLI, etc.), and paste this repo's URL as your first message — e.g. `https://github.com/hlavamir/LLM_Wiki_Template` — then hit enter. The agent fetches `AGENTS.md` and `CLAUDE.md` from GitHub, writes them into the folder, and runs the first-run wizard. (This works because `AGENTS.md` itself carries the instruction — see "Bootstrapping from a link" in that file.)
+
+### Option B: copy the files
+
+Drop [AGENTS.md](AGENTS.md) (and [CLAUDE.md](CLAUDE.md), a one-line pointer for Claude Code) into an empty folder, start an agent session there, and it bootstraps the rest.
 
 ## Credits
 
