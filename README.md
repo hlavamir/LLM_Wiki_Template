@@ -21,6 +21,35 @@ Whichever option you pick, the first-run wizard asks four things: **who you are*
 - **Just me** → one local wiki, nothing more to set up.
 - **Several people** → the folder you're in becomes a **shared wiki**, so it must sit on storage everyone can reach and that syncs (Google Shared Drive, OneDrive, Dropbox, …). The wizard also installs [`personal-template/`](personal-template/) into it. Each person — you included — then creates their own **personal wiki** in a separate local folder by pointing an agent at `personal-template/AGENTS.md` (steps in [`personal-template/README.md`](personal-template/README.md)). Personal wikis exchange knowledge with the shared one through `push`, `pull` and `sync`, so people work privately and publish what's ready.
 
+## Commands
+
+Once a wiki is set up you mostly just talk to the agent. A few words are **standing commands** — say them and the agent runs that workflow straight away, with no "are you sure?" — and everything else is ordinary conversation. All of them are specified in `AGENTS.md`; the last four exist only where there's a shared wiki to talk to (see [Where each command works](#where-each-command-works)).
+
+| Say… | What happens |
+|---|---|
+| **`ingest`** | Captures the current conversation to `raw/` as a markdown file, writes its summary page, creates or updates the relevant party / entity / concept pages, and updates `index.md` and `log.md`. To ingest something other than the chat — a document, transcript, web article, source file — just hand it over and ask. |
+| **`lint`** | Checks the **facts**: scans every page against every other for genuine contradictions (not different wording, not mere staleness). Each one is resolved on the spot — the newer source wins if the dates make that unambiguous, otherwise the agent stops and asks you, one conflict at a time. The losing fact is marked superseded, never deleted. A run is logged even when it finds nothing. |
+| **`maintain`** | Checks the **structure**: folder layout, frontmatter, link format and broken links, naming, orphan pages, concepts mentioned but lacking a page. Works through *every* open item in `wiki-maintenance.md` — things it found itself and plain-language instructions you wrote there (e.g. "convert all `[[wikilinks]]` to markdown links") — closes each into that file's log, and asks about anything ambiguous. |
+| **`sync`** | Shared setups: **pull**, then **ingest** anything durable from the session, then **push**, as one run. If the two sides genuinely disagree it stops at that page, explains the conflict, asks you, and then asks whether to continue from where it stopped. |
+| **`pull`** | Shared setups: brings the shared wiki's pages into your personal wiki, reconciling pages that differ, and picks up any new schema rules from the shared wiki's `personal-template/`. |
+| **`push`** | Shared setups: sends your `public: true` pages to the shared wiki (new pages are created, differing ones reconciled — newer wins, or it asks), and adds them to the shared `index.md` and `log.md`. `public: false` pages never leave your wiki. |
+| **`fetch news`** | Shared setups: read-only. Summarizes what changed in the shared wiki — optionally "since" a date you give — calling out what's actually notable rather than dumping a file list. |
+
+### Not commands, but worth knowing
+
+- **Questions are queries.** Ask anything; the agent reads `index.md`, drills into the relevant pages, answers with citations to the raw sources, and files a durable answer back into the wiki as a new page.
+- **The agent offers to capture.** At the end of a session that produced something worth keeping, it offers — in one line — to save and ingest the chat. Saying `ingest` is the shortcut.
+- **Writes take a lock.** Every command that writes holds `wiki.lock` while it does, so two agents can't write at once; `lint`, `maintain`, `push` and `pull` hold it for the whole run. On synced storage the lock is advisory (sync lag), as `AGENTS.md` explains.
+- **No scheduled checks.** The agent may casually ask at a natural point whether you'd like it to `fetch news`, but it won't set up automatic polling unless you ask.
+
+### Where each command works
+
+| Wiki | `ingest` `lint` `maintain` | `sync` `pull` `push` `fetch news` |
+|---|---|---|
+| Solo wiki | ✓ | — |
+| Shared wiki (the synced folder) | ✓ | — (contributors push to it from their personal wikis) |
+| Personal wiki (bootstrapped from `personal-template/`) | ✓ | ✓ |
+
 ## Credits
 
 This is an implementation of Andrej Karpathy's **LLM Wiki** pattern, described in his gist: [gist.github.com/karpathy/442a6bf555914893e9891c11519de94f](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f). The core idea, the three-layer split, and the guiding philosophy below are his — this repo turns that description into a concrete, reusable schema file plus a few operational additions covered below.
