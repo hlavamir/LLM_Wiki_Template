@@ -21,7 +21,7 @@ Set up your own personal wiki for this project, connected to the shared one this
 
 ## What the agent does from there
 
-- Scaffolds a full personal wiki in your folder — its own `AGENTS.md`, `CLAUDE.md`, `index.md`, `log.md`, `wiki-maintenance.md`, `raw/`, `wiki/`.
+- Scaffolds a full personal wiki in your folder — its own `AGENTS.md`, `CLAUDE.md`, `index.md`, `log/`, `wiki-maintenance.md`, `raw/`, `wiki/` — and copies the shared wiki's `schema/` modules and `tools/wiki.py` (Python 3 recommended; without it everything works by hand, with more tokens).
 - Writes a `wiki-shared-link.md` pointing back at the shared wiki — it reads the location straight from the path you gave it, so there's nothing to look up.
 - Pulls in **everything currently in the shared wiki**.
 
@@ -40,3 +40,7 @@ From then on your folder is a fully independent personal wiki: ingest your own n
 | `maintain` | Work the structural backlog: links, frontmatter, naming, orphans. |
 
 See `AGENTS.md` in this folder for the full schema this bootstraps from.
+
+## Already have a personal wiki on schema 1.1.0?
+
+Pull can't upgrade a 1.1.0 wiki by itself. Once, in your personal wiki, say: *"Upgrade this wiki's schema from `<full path to this folder>`, following step 5 of Pull in its `schema/sync.md`."* Then say `maintain` to migrate your log and index. From then on, `pull` keeps your schema current.
