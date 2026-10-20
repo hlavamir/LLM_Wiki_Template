@@ -1,12 +1,12 @@
 ---
-schema_version: "1.2.0"             # version of THIS schema; stamped into each page's `schema_version` on every edit; Pull keeps it in step with the shared wiki's personal-template
+schema_version: "1.2.1"             # version of THIS schema; stamped into each page's `schema_version` on every edit; Pull keeps it in step with the shared wiki's personal-template
 project: "{{PROJECT_NAME}}"        # filled when the shared wiki installed this template — fixed: the shared wiki's project
 mode: "personal"
 owner_name: "{{FULL_NAME}}"         # asked at first run — 'Lastname Firstname'
 owner_nickname: "{{NICKNAME}}"      # short display name
 repo_path: "{{REPO_PATH_OR_NONE}}"  # local path to a related code repo, or "none"
 default_public: {{DEFAULT_PUBLIC}}   # true | false — a new page's `public:` value; asked at first run
-python: "{{PYTHON_COMMAND}}"        # command that runs tools/wiki.py on this machine (python3 | python | py), or "none"
+python: "{{PYTHON_COMMAND}}"        # hint: the command that last ran tools/wiki.py (python3 | python | py), or "none" — see Tools
 created: {{YYYY-MM-DD}}             # stamped in YOUR copy at first run
 modified: {{YYYY-MM-DD}}
 type: schema
@@ -39,7 +39,7 @@ You're reading this inside a shared wiki's `personal-template/` folder, so nobod
 │   ├── lock.md          #   wiki.lock protocol details and manual fallback
 │   ├── lint.md          #   the Lint operation
 │   └── maintain.md      #   the Maintain operation
-├── tools/wiki.py        # mechanical helper (see Tools) — also replaced by Pull
+├── tools/               # mechanical helper: wiki.py + wiki_*.py (see Tools) — also replaced by Pull
 ├── index.md             # catalog of pages — browse it; search first
 ├── log/YYYY-MM.md       # append-only one-line timeline, one file per month
 ├── wiki-maintenance.md  # structural backlog + changelog (Maintain)
@@ -104,7 +104,9 @@ You're reading this inside a shared wiki's `personal-template/` folder, so nobod
 
 ## Tools
 
-`tools/wiki.py` (Python 3, standard library only), run as `<python> tools/wiki.py <command>` with `<python>` from this file's frontmatter. `--root <path>` points it at another wiki (e.g. the shared one).
+`tools/` (Python 3, standard library only): `tools/wiki.py` is the one entry point, the `wiki_*.py` files beside it hold one operation each. Run it as `<python> tools/wiki.py <command>`; `--root <path>` points it at another wiki (e.g. the shared one).
+
+**Finding `<python>`.** The frontmatter's `python:` is a hint. Use it; if it fails ("not found", or Windows' Store stub saying "Python was not found"), try `python3`, `python`, `py` in turn, use the first that reports Python 3.8+, and update `python:` to it — this wiki lives on this machine. `python: none` → try the three once per session anyway, in case Python has been installed since. Nothing works → do the work by hand following the modules.
 
 | Command | Use |
 |---|---|
@@ -118,7 +120,6 @@ You're reading this inside a shared wiki's `personal-template/` folder, so nobod
 | `lock acquire --op <op> --session <id>` / `lock release --session <id>` | The `wiki.lock` protocol (`--root <shared>` for Push); one session id per conversation |
 | `migrate-log` | One-time: turn a pre-1.2.0 multi-line `log.md` into `log/` files |
 
-If `python:` is `none`, do the same work by hand following the modules.
 
 ## Operations
 
@@ -148,6 +149,6 @@ If `python:` is `none`, do the same work by hand following the modules.
 ## Notes
 
 - **One wiki ↔ one project**, fixed. A second project means a second personal wiki.
-- **Schema versioning** (semver) is kept in step with the shared wiki's `personal-template/AGENTS.md` by Pull. `1.2.0` added the token-budget conventions (one-line monthly logs, short index, search-first Query, incremental Lint, `tools/wiki.py`, `## History`, history compaction, on-demand modules); upgrading a 1.1.0 personal wiki is described in the shared wiki's `personal-template/README.md`.
+- **Schema versioning** (semver) is kept in step with the shared wiki's `personal-template/AGENTS.md` by Pull. `1.2.0` added the token-budget conventions (one-line monthly logs, short index, search-first Query, incremental Lint, `tools/wiki.py`, `## History`, history compaction, on-demand modules); `1.2.1` made `python:` a hint with a fallback and split `tools/` into one file per operation; upgrading a 1.1.0 personal wiki is described in the shared wiki's `personal-template/README.md`.
 - **`AGENTS.md` is the single source of truth**; Claude Code reads it through the one-line `CLAUDE.md` pointer. Put your own additions here, not in `schema/` or `tools/`, which Pull replaces.
 - **Keep this file and the shared wiki's `AGENTS.md` structurally parallel.**

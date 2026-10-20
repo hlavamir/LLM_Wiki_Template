@@ -8,7 +8,7 @@ Read this only when `personal-template/AGENTS.md` sends you here. Work in the NE
 4. **Copy the machinery** into the new folder:
    - `<shared>/personal-template/AGENTS.md` → `AGENTS.md`, `<shared>/personal-template/schema/sync.md` → `schema/sync.md`
    - `<shared>/schema/lock.md`, `lint.md`, `maintain.md` → `schema/`
-   - `<shared>/tools/wiki.py` → `tools/wiki.py`
+   - every `.py` file in `<shared>/tools/` → `tools/` (`wiki.py` and the `wiki_*.py` modules it imports)
 5. **Lock** the new wiki: generate a session id and run `<python> tools/wiki.py lock acquire --op init --session <id>` (no Python: `schema/lock.md`). Hold it until step 9.
 6. **Personalize `AGENTS.md`** with targeted edits: fill `{{FULL_NAME}}`, `{{NICKNAME}}`, `{{REPO_PATH_OR_NONE}}`, `{{DEFAULT_PUBLIC}}` from step 3, `{{PYTHON_COMMAND}}` from step 2, any remaining `{{…}}` from the shared wiki (project, link style, About line), `created`/`modified` = today. Delete the `TEMPLATE FILE` comment and everything from the `template-only` marker comment through its `/template-only` closing comment. It is now an independent personal schema.
 7. **Scaffold:** `CLAUDE.md` — copy the shared wiki's `CLAUDE.md` (a pointer whose `@AGENTS.md` line makes Claude Code load the schema); `wiki-shared-link.md` — frontmatter `type: shared-link` and `shared_wiki_path: <shared>`, plus a line saying the path is specific to this machine; `index.md` (heading + empty `## Parties`, `## Entities`, `## Concepts`); `wiki-maintenance.md` (`## Open tasks`, `## Log`); folders `raw/`, `log/`, `wiki/parties/`, `wiki/entities/`, `wiki/concepts/`, `wiki/summaries/`, `wiki/assets/`.

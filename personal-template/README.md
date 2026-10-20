@@ -21,7 +21,7 @@ Set up your own personal wiki for this project, connected to the shared one this
 
 ## What the agent does from there
 
-- Scaffolds a full personal wiki in your folder — its own `AGENTS.md`, `CLAUDE.md`, `index.md`, `log/`, `wiki-maintenance.md`, `raw/`, `wiki/` — and copies the shared wiki's `schema/` modules and `tools/wiki.py` (Python 3 recommended; without it everything works by hand, with more tokens).
+- Scaffolds a full personal wiki in your folder — its own `AGENTS.md`, `CLAUDE.md`, `index.md`, `log/`, `wiki-maintenance.md`, `raw/`, `wiki/` — and copies the shared wiki's `schema/` modules and `tools/` scripts (Python 3 recommended; without it everything works by hand, with more tokens).
 - Writes a `wiki-shared-link.md` pointing back at the shared wiki — it reads the location straight from the path you gave it, so there's nothing to look up.
 - Pulls in **everything currently in the shared wiki**.
 

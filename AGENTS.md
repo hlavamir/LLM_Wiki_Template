@@ -1,11 +1,11 @@
 ---
-schema_version: "1.2.0"             # version of THIS schema (see Notes); stamped into each page's `schema_version` on every edit
+schema_version: "1.2.1"             # version of THIS schema (see Notes); stamped into each page's `schema_version` on every edit
 project: "{{PROJECT_NAME}}"        # set at first run
 mode: "{{solo|shared}}"             # set at first run — 'solo' (one person) or 'shared' (synced wiki for several people)
 owner_name: "{{FULL_NAME}}"         # solo mode only — 'Lastname Firstname'
 owner_nickname: "{{NICKNAME}}"      # solo mode only — short display name
 repo_path: "{{REPO_PATH_OR_NONE}}"  # solo mode only — local path to a related code repo, or "none"
-python: "{{PYTHON_COMMAND}}"        # command that runs tools/wiki.py on this machine (python3 | python | py), or "none"
+python: "{{PYTHON_COMMAND}}"        # hint: the command that last ran tools/wiki.py (python3 | python | py), or "none" — see Tools
 type: schema
 created: {{YYYY-MM-DD}}
 modified: {{YYYY-MM-DD}}
@@ -29,7 +29,7 @@ If the user pasted a GitHub URL to this template as their first message in an em
 
 1. Normalize the URL to `owner`/`repo`/`branch`: `github.com/<o>/<r>` or `<r>.git` → the default branch (from `https://api.github.com/repos/<o>/<r>` → `default_branch`; fall back to `main`, then `master`); `github.com/<o>/<r>/tree/<branch>` → that branch.
 2. Download these files from `https://raw.githubusercontent.com/<o>/<r>/<branch>/<path>` into the same paths here, verbatim — with a download command (`curl -fsSL -o <path> <url>`, `Invoke-WebRequest -OutFile`), not by re-typing their content:
-   `AGENTS.md`, `CLAUDE.md`, `schema/first-run.md`, `schema/lock.md`, `schema/lint.md`, `schema/maintain.md`, `schema/shared.md`, `tools/wiki.py`, `personal-template/AGENTS.md`, `personal-template/README.md`, `personal-template/schema/first-run.md`, `personal-template/schema/sync.md`
+   `AGENTS.md`, `CLAUDE.md`, `schema/first-run.md`, `schema/lock.md`, `schema/lint.md`, `schema/maintain.md`, `schema/shared.md`, `tools/wiki.py`, `tools/wiki_settings.py`, `tools/wiki_common.py`, `tools/wiki_maintain.py`, `tools/wiki_lint.py`, `tools/wiki_log.py`, `tools/wiki_sync.py`, `tools/wiki_ingest.py`, `tools/wiki_lock.py`, `personal-template/AGENTS.md`, `personal-template/README.md`, `personal-template/schema/first-run.md`, `personal-template/schema/sync.md`
 3. Tell the user in one line what you fetched from where, then continue with **First run** below. Don't clone the repo or copy its `.git`, `README.md` or `LICENSE` — this wiki is a fresh instance, not a fork.
 
 ## First run
@@ -47,7 +47,7 @@ No scaffold yet (no `index.md` or `wiki/` next to this file)? Read `schema/first
 │   ├── lint.md          #   the Lint operation
 │   ├── maintain.md      #   the Maintain operation
 │   └── shared.md        #   shared mode only — notes for the shared half of a shared+personal pair
-├── tools/wiki.py        # mechanical helper: check, lint scope, log, capture, lock (see Tools)
+├── tools/               # mechanical helper: wiki.py (entry point) + one wiki_*.py per operation (see Tools)
 ├── index.md             # catalog of pages — browse it; search first
 ├── log/YYYY-MM.md       # append-only one-line timeline, one file per month
 ├── wiki-maintenance.md  # structural backlog + changelog (Maintain)
@@ -114,7 +114,9 @@ Regroup `wiki/` by another axis (time, module, client) only when the domain clea
 
 ## Tools
 
-`tools/wiki.py` (Python 3, standard library only) does the mechanical work so the agent doesn't spend tokens on it. Run it as `<python> tools/wiki.py <command>`, where `<python>` is the `python:` value in this file's frontmatter. Its output is terse by design — read it, don't re-derive it.
+`tools/` (Python 3, standard library only) does the mechanical work so the agent doesn't spend tokens on it. `tools/wiki.py` is the one entry point; the `wiki_*.py` files beside it hold one operation each. Run it as `<python> tools/wiki.py <command>`. Its output is terse by design — read it, don't re-derive it.
+
+**Finding `<python>`.** The frontmatter's `python:` is a hint — the command that worked on the machine that last set it — not a guarantee<!-- shared-only -->: a shared wiki is opened from many machines<!-- /shared-only -->. Use it; if it fails ("not found", or Windows' Store stub saying "Python was not found"), try `python3`, `python`, `py` in turn and use the first that reports Python 3.8+ for the rest of the session.<!-- solo-only --> If that differs from `python:`, update `python:`.<!-- /solo-only --><!-- shared-only --> Don't rewrite `python:` for your machine — it would only break the next person's.<!-- /shared-only --> `python: none` means none was found when it was last checked: try the three once per session anyway, in case Python has been installed since. Nothing works → do the work by hand following the modules.
 
 | Command | Use |
 |---|---|
@@ -127,7 +129,7 @@ Regroup `wiki/` by another axis (time, module, client) only when the domain clea
 | `lock acquire --op <op> --session <id>` / `lock release --session <id>` | The `wiki.lock` protocol; generate one random session id per conversation and reuse it |
 | `migrate-log` | One-time: turn a pre-1.2.0 multi-line `log.md` into `log/` files |
 
-If `python:` is `none`, do the same work by hand following the modules. Don't customize `tools/wiki.py` per wiki; improve the template's copy instead.
+Don't customize `tools/` per wiki; improve the template's copy instead.
 
 ## Operations
 
@@ -156,7 +158,7 @@ If `python:` is `none`, do the same work by hand following the modules. Don't cu
 
 ## Notes
 
-- **Schema versioning** (semver): PATCH for wording, MINOR for additive changes, MAJOR for changes that make existing pages or workflows non-conforming. Bump `schema_version` on every change to this file or `schema/`; pages keep their old value until next edited, which shows what was written under which schema. History: `1.0.0` original; `1.1.0` shared mode, `history`, `schema_version`; `1.2.0` token budget — one-line monthly logs, short index without summaries, search-first Query, incremental Lint, `tools/wiki.py`, current-state-first pages with `## History`, history compaction, on-demand `schema/` modules. A wiki upgraded from 1.1.0 has `check` findings until Maintain migrates it (`schema/maintain.md`, "Upgrading").
+- **Schema versioning** (semver): PATCH for wording, MINOR for additive changes, MAJOR for changes that make existing pages or workflows non-conforming. Bump `schema_version` on every change to this file or `schema/`; pages keep their old value until next edited, which shows what was written under which schema. History: `1.0.0` original; `1.1.0` shared mode, `history`, `schema_version`; `1.2.0` token budget — one-line monthly logs, short index without summaries, search-first Query, incremental Lint, `tools/wiki.py`, current-state-first pages with `## History`, history compaction, on-demand `schema/` modules; `1.2.1` `python:` treated as a hint with a fallback, `tools/` split into one file per operation. A wiki upgraded from 1.1.0 has `check` findings until Maintain migrates it (`schema/maintain.md`, "Upgrading").
 - Plain markdown: git-friendly, Obsidian-friendly with `link_style: wikilinks`.
 - Optional extras — `overview.md`/`synthesis.md`, graph colour tags, a `sensitive:` flag, scheduled ingest, a search tool or MCP server — only when the user asks. A search tool pays for itself past ~50 pages.
 - **`AGENTS.md` is the single source of truth**; most agents (Codex CLI, Gemini CLI, Aider, Zed, Devin, …) read it natively. Claude Code reads `CLAUDE.md`, a pointer whose `@AGENTS.md` import loads this file with the project instructions (no extra Read). For tools that expect another filename (`.cursor/rules/`, `.windsurfrules`, `.github/copilot-instructions.md`), add a similar pointer — never a copy.

@@ -27,7 +27,7 @@ Only `differ` pages are ever read in full. Without Python: compare `modified` da
 3. `differ` → reconcile as in Push, in reverse, writing here.
 4. `private-collision` → touch nothing; file a task in `wiki-maintenance.md` (which page, and that a private page shares a public path).
 5. **Schema propagation.** Compare `<shared>/personal-template/AGENTS.md`'s `schema_version` with this file's. Equal → skip — nothing to read. Different →
-   - copy `<shared>/schema/lock.md`, `lint.md`, `maintain.md`, `<shared>/personal-template/schema/sync.md` and `<shared>/tools/wiki.py` over the local copies;
+   - copy `<shared>/schema/lock.md`, `lint.md`, `maintain.md`, `<shared>/personal-template/schema/sync.md` and every `.py` file in `<shared>/tools/` over the local copies (delete local `tools/*.py` files the shared wiki no longer has);
    - rebuild `AGENTS.md`: start from the template, refill its placeholders from your current frontmatter values (owner fields, `default_public`, `python`, `created`), carry over every section or rule you added that the template lacks, set `schema_version` to the template's. Show the user a short list of what changes and ask before writing it.
    - Pages keep their own `schema_version` until next edited.
 6. Release the lock; `log pull "<n> pulled, <m> created, <k> reconciled[, schema → X.Y.Z]"`. (At first run, the `init` entry covers this.)
