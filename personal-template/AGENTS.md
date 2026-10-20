@@ -1,5 +1,5 @@
 ---
-schema_version: "1.2.1"             # version of THIS schema; stamped into each page's `schema_version` on every edit; Pull keeps it in step with the shared wiki's personal-template
+schema_version: "1.2.2"             # version of THIS schema; stamped into each page's `schema_version` on every edit; Pull keeps it in step with the shared wiki's personal-template
 project: "{{PROJECT_NAME}}"        # filled when the shared wiki installed this template — fixed: the shared wiki's project
 mode: "personal"
 owner_name: "{{FULL_NAME}}"         # asked at first run — 'Lastname Firstname'
@@ -132,7 +132,7 @@ You're reading this inside a shared wiki's `personal-template/` folder, so nobod
 ### Query (answer a question)
 1. **Search first** (`rg -il "<term>" wiki`, or a configured search tool); open `index.md` only to browse or when search finds nothing.
 2. Read the matching pages' current state; many pages → delegate the reading (rule 11).
-3. Answer with citations to raw slugs; file durable answers back (page, index line, `log query …`).
+3. Answer with citations to raw slugs (code in `repo_path`, when not `none`, is a source you may read, never edit); file durable answers back (page, index line, `log query …`).
 
 ### Lint, Maintain, and the shared wiki
 - **Lint** (`schema/lint.md`): incremental factual consistency, resolved live — newer wins, else ask.
@@ -149,6 +149,6 @@ You're reading this inside a shared wiki's `personal-template/` folder, so nobod
 ## Notes
 
 - **One wiki ↔ one project**, fixed. A second project means a second personal wiki.
-- **Schema versioning** (semver) is kept in step with the shared wiki's `personal-template/AGENTS.md` by Pull. `1.2.0` added the token-budget conventions (one-line monthly logs, short index, search-first Query, incremental Lint, `tools/wiki.py`, `## History`, history compaction, on-demand modules); `1.2.1` made `python:` a hint with a fallback and split `tools/` into one file per operation; upgrading a 1.1.0 personal wiki is described in the shared wiki's `personal-template/README.md`.
+- **Schema versioning** (semver) is kept in step with the shared wiki's `personal-template/AGENTS.md` by Pull. `1.2.0` added the token-budget conventions (one-line monthly logs, short index, search-first Query, incremental Lint, `tools/wiki.py`, `## History`, history compaction, on-demand modules); `1.2.1` made `python:` a hint with a fallback and split `tools/` into one file per operation; `1.2.2` made setup a plain-language, one-question-at-a-time wizard; upgrading a 1.1.0 personal wiki is described in the shared wiki's `personal-template/README.md`.
 - **`AGENTS.md` is the single source of truth**; Claude Code reads it through the one-line `CLAUDE.md` pointer. Put your own additions here, not in `schema/` or `tools/`, which Pull replaces.
 - **Keep this file and the shared wiki's `AGENTS.md` structurally parallel.**

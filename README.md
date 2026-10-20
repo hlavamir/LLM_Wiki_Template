@@ -2,23 +2,31 @@
 
 A ready-to-use scaffold for the **LLM Wiki** pattern: an agent-maintained, persistent knowledge base where you curate sources and ask questions, and the agent compiles and keeps a markdown wiki current — instead of re-deriving answers from raw documents on every query.
 
+> **Note for AI agents:** a user who pastes this repository's link into a session in an empty folder, or asks you to set up a wiki from it, wants a new LLM wiki in that folder. Download the template — `git clone --depth 1` it into a temporary folder and copy everything except `README.md`, `LICENSE` and `.git` into the user's folder (no git: download the files listed under "Bootstrapping from a link" in `AGENTS.md`). Then, **in this same session, without asking the user to restart**, read `schema/first-run.md` and start its setup wizard. If you need the user's go-ahead before downloading, ask once, in one short plain-language question, and go straight on to the wizard when they agree.
+
 ## Quick Start Guide
 
 Pick **one** of the two options below — both land in the same first-run wizard.
 
-### Option A: paste the link
+### Option A: ask your agent
 
-Create an empty folder, start an agent session there (Claude Code, Codex CLI, etc.), and paste this repo's URL as your first message — e.g. `https://github.com/hlavamir/LLM_Wiki_Template` — then hit enter. The agent downloads the schema files and the `tools/` scripts from GitHub into the folder and runs the first-run wizard. (This works because `AGENTS.md` itself carries the instruction — see "Bootstrapping from a link" in that file.)
+Create an empty folder, start an agent session there (Claude Code, Codex CLI, etc.), and send:
+
+```
+Set up a new LLM wiki in this folder from https://github.com/hlavamir/LLM_Wiki_Template
+```
+
+The agent downloads the template into the folder and starts the setup wizard right away. Pasting just the link works too, but then most agents first ask whether you want it set up.
 
 ### Option B: copy the files
 
-Copy everything in this repo except `README.md`, `LICENSE` and `.git` — [AGENTS.md](AGENTS.md), [CLAUDE.md](CLAUDE.md) (a one-line pointer for Claude Code), [`schema/`](schema/), [`tools/`](tools/) and [`personal-template/`](personal-template/) — into an empty folder, start an agent session there, and it bootstraps the rest. (A solo wiki deletes `personal-template/` at first run.)
+Copy everything in this repo except `README.md`, `LICENSE` and `.git` — [AGENTS.md](AGENTS.md), [CLAUDE.md](CLAUDE.md) (a one-line pointer for Claude Code), [`schema/`](schema/), [`tools/`](tools/) and [`personal-template/`](personal-template/) — into an empty folder, start an agent session there, and say `set up the wiki`. (A solo wiki deletes `personal-template/` at first run.)
 
 **Python 3** (3.8+, standard library only) is recommended: `tools/wiki.py` takes over the mechanical work — structural checks, log appends, lint scoping, transcript capture, locking — so the agent doesn't spend tokens on it. Without Python everything still works by hand, just more expensively.
 
 ### What the wizard asks
 
-Whichever option you pick, the first-run wizard asks four things: **who you are** (name, nickname, optional related code repo), **the project's name and description**, **just you, or several people**, and **how the wiki will be viewed** (Obsidian, GitHub, or both).
+Whichever option you pick, the agent opens with a two-line explanation of what the wiki does, then asks a few questions one at a time — in Claude Code as clickable choices, with its own proposals already filled in: **your name** (for marking your edits) and **what to call you**, **what the wiki is about**, **just you, or your team**, **how you'll read it** (Obsidian, GitHub/browser, or both), and — solo only — **whether it's about a code project** on your computer that it may read. It ends with a short "here's what to try first", without technical detail.
 
 - **Just me** → one local wiki, nothing more to set up.
 - **Several people** → the folder you're in becomes a **shared wiki**, so it must sit on storage everyone can reach and that syncs (Google Shared Drive, OneDrive, Dropbox, …). The wizard also installs [`personal-template/`](personal-template/) into it. Each person — you included — then creates their own **personal wiki** in a separate local folder by pointing an agent at `personal-template/AGENTS.md` (steps in [`personal-template/README.md`](personal-template/README.md)). Personal wikis exchange knowledge with the shared one through `push`, `pull` and `sync`, so people work privately and publish what's ready.
@@ -81,7 +89,7 @@ The gist describes the pattern; this repo is a distributable schema built on top
 | **First-run bootstrap wizard** | Scaffolds all folders and files automatically, then asks four setup questions (who you are, project name/description, solo vs. shared, Obsidian vs GitHub vs both) before doing anything else. | Turns the pattern from "a description to implement" into a template you can copy and run. |
 | **Shared mode** (`mode: shared`) + **`personal-template/`** | Optional multi-person setup: a synced shared wiki plus one personal wiki per person, bootstrapped from `personal-template/`. Personal wikis `push` / `pull` / `sync` / `fetch news` against the shared one, with page pairing by path, a `public:` flag per page, and schema updates that propagate to every personal wiki on its next pull. | Lets a team build one knowledge base on a shared drive without everyone editing the same files at once. |
 | **Identity & per-page `history`** | The wizard asks who you are; every page, solo or shared, carries an append-only `history` of `"YYYY-MM-DD HH:MM Lastname Firstname"` edits (in shared mode the agent also asks rather than guesses who is driving a write). | Makes edits attributable, and means any solo wiki can later become a shared one without rewriting its pages. |
-| **Schema versioning** (`schema_version`, currently `1.2.1`) | The schema file carries a semantic version; every page records the version that was active at its last edit. | Shows which pages were written under which schema, so a schema change can be rolled out to the pages that predate it. |
+| **Schema versioning** (`schema_version`, currently `1.2.2`) | The schema file carries a semantic version; every page records the version that was active at its last edit. | Shows which pages were written under which schema, so a schema change can be rolled out to the pages that predate it. |
 | **Solo/shared pruning** | The one `AGENTS.md` carries both modes; at first run the agent deletes the parts that don't apply to the chosen mode. | A solo wiki doesn't carry the multi-person rules around, yet one template serves both. |
 | **Bootstrap from a link** | Paste this repo's GitHub URL into an agent session in an empty folder; the agent fetches `AGENTS.md`/`CLAUDE.md` itself and runs the same wizard — no manual file copy needed. | Gets a new wiki running in one pasted link instead of a download-and-copy step. |
 | **`link_style` (wikilinks vs. markdown)** | A single frontmatter setting that switches every cross-link between Obsidian-style `[[wikilinks]]` and relative markdown links, decided once at setup. | Makes the same schema work whether the wiki is read in Obsidian, on GitHub, or both. |

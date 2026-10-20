@@ -13,11 +13,11 @@ Set up your own personal wiki for this project, connected to the shared one this
    ```
 
    For example, if the shared wiki is a Shared Drive mounted as `H:\Shared drives\MyProject`, that's `H:\Shared drives\MyProject\personal-template\AGENTS.md`.
-4. **The agent asks you four quick things** before it builds anything:
-   - your **full name** — written surname-first in every edit's `history` record from now on,
-   - a **nickname** — the short form used in casual references and log attributions,
-   - the **local path of a related code repo**, or `none`,
-   - whether new pages should be **public** (shared with the team on your next Push) or **private** by default.
+4. **The agent asks you four quick things**, one at a time (in Claude Code as clickable choices), before it builds anything:
+   - the **name** to put on your edits (surname first),
+   - what it should **call you**,
+   - whether new pages are **shared with the team** by default or stay **private** until you say so,
+   - whether your work is on a **code project** on this computer it may read (never change).
 
 ## What the agent does from there
 

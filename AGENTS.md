@@ -1,5 +1,5 @@
 ---
-schema_version: "1.2.1"             # version of THIS schema (see Notes); stamped into each page's `schema_version` on every edit
+schema_version: "1.2.2"             # version of THIS schema (see Notes); stamped into each page's `schema_version` on every edit
 project: "{{PROJECT_NAME}}"        # set at first run
 mode: "{{solo|shared}}"             # set at first run — 'solo' (one person) or 'shared' (synced wiki for several people)
 owner_name: "{{FULL_NAME}}"         # solo mode only — 'Lastname Firstname'
@@ -25,12 +25,11 @@ This folder is an **LLM-maintained knowledge wiki** following Andrej Karpathy's 
 <!-- template-only -->
 ## Bootstrapping from a link (no local files yet)
 
-If the user pasted a GitHub URL to this template as their first message in an empty folder (no `AGENTS.md` on disk — you fetched this file), first:
+If the user pasted a GitHub URL to this template, or asked you to set up a wiki from it, in an empty folder (no `AGENTS.md` on disk — you fetched this file), they want a new wiki here. If you need their go-ahead to download, ask once in one plain sentence ("Shall I set up a new LLM wiki in this folder?"); then:
 
-1. Normalize the URL to `owner`/`repo`/`branch`: `github.com/<o>/<r>` or `<r>.git` → the default branch (from `https://api.github.com/repos/<o>/<r>` → `default_branch`; fall back to `main`, then `master`); `github.com/<o>/<r>/tree/<branch>` → that branch.
-2. Download these files from `https://raw.githubusercontent.com/<o>/<r>/<branch>/<path>` into the same paths here, verbatim — with a download command (`curl -fsSL -o <path> <url>`, `Invoke-WebRequest -OutFile`), not by re-typing their content:
+1. **Get the files.** Preferred: `git clone --depth 1 <url> <temporary folder>` (add `--branch <branch>` for a `…/tree/<branch>` URL), copy everything except `README.md`, `LICENSE` and `.git` into this folder, delete the temporary clone. Without git: work out `owner`/`repo`/`branch` (no branch in the URL → `default_branch` from `https://api.github.com/repos/<o>/<r>`, falling back to `main`, then `master`) and download each file below from `https://raw.githubusercontent.com/<o>/<r>/<branch>/<path>` with a download command (`curl -fsSL -o <path> <url>`, `Invoke-WebRequest -OutFile`) — never by re-typing content:
    `AGENTS.md`, `CLAUDE.md`, `schema/first-run.md`, `schema/lock.md`, `schema/lint.md`, `schema/maintain.md`, `schema/shared.md`, `tools/wiki.py`, `tools/wiki_settings.py`, `tools/wiki_common.py`, `tools/wiki_maintain.py`, `tools/wiki_lint.py`, `tools/wiki_log.py`, `tools/wiki_sync.py`, `tools/wiki_ingest.py`, `tools/wiki_lock.py`, `personal-template/AGENTS.md`, `personal-template/README.md`, `personal-template/schema/first-run.md`, `personal-template/schema/sync.md`
-3. Tell the user in one line what you fetched from where, then continue with **First run** below. Don't clone the repo or copy its `.git`, `README.md` or `LICENSE` — this wiki is a fresh instance, not a fork.
+2. **Start the wizard now, in this session.** Read `schema/first-run.md` and begin it — the user should not have to ask again or start a new session. Don't report the download beyond half a sentence ("Got the template — let's set up your wiki."). The wiki is a fresh instance, not a fork: no `.git`, `README.md` or `LICENSE`.
 
 ## First run
 
@@ -143,7 +142,7 @@ Don't customize `tools/` per wiki; improve the template's copy instead.
 ### Query (answer a question)
 1. **Search first:** grep the key terms across `wiki/` (`rg -il "<term>" wiki`) or use the configured search tool. Open `index.md` only to browse, or when search finds nothing.
 2. Read the matching pages' current state. More than a handful of pages → delegate the reading (rule 11).
-3. Answer with citations to raw slugs.
+3. Answer with citations to raw slugs.<!-- solo-only --> Code in `repo_path` (when not `none`) is a source you may read for the answer, never edit.<!-- /solo-only -->
 4. File durable answers back as a new or updated page (index line, `log query "<title>" --link <page>`).
 
 ### Lint and Maintain
@@ -158,7 +157,7 @@ Don't customize `tools/` per wiki; improve the template's copy instead.
 
 ## Notes
 
-- **Schema versioning** (semver): PATCH for wording, MINOR for additive changes, MAJOR for changes that make existing pages or workflows non-conforming. Bump `schema_version` on every change to this file or `schema/`; pages keep their old value until next edited, which shows what was written under which schema. History: `1.0.0` original; `1.1.0` shared mode, `history`, `schema_version`; `1.2.0` token budget — one-line monthly logs, short index without summaries, search-first Query, incremental Lint, `tools/wiki.py`, current-state-first pages with `## History`, history compaction, on-demand `schema/` modules; `1.2.1` `python:` treated as a hint with a fallback, `tools/` split into one file per operation. A wiki upgraded from 1.1.0 has `check` findings until Maintain migrates it (`schema/maintain.md`, "Upgrading").
+- **Schema versioning** (semver): PATCH for wording, MINOR for additive changes, MAJOR for changes that make existing pages or workflows non-conforming. Bump `schema_version` on every change to this file or `schema/`; pages keep their old value until next edited, which shows what was written under which schema. History: `1.0.0` original; `1.1.0` shared mode, `history`, `schema_version`; `1.2.0` token budget — one-line monthly logs, short index without summaries, search-first Query, incremental Lint, `tools/wiki.py`, current-state-first pages with `## History`, history compaction, on-demand `schema/` modules; `1.2.1` `python:` treated as a hint with a fallback, `tools/` split into one file per operation; `1.2.2` plain-language setup wizard asking one question at a time (clickable where the agent supports it), started in the same session as the download. A wiki upgraded from 1.1.0 has `check` findings until Maintain migrates it (`schema/maintain.md`, "Upgrading").
 - Plain markdown: git-friendly, Obsidian-friendly with `link_style: wikilinks`.
 - Optional extras — `overview.md`/`synthesis.md`, graph colour tags, a `sensitive:` flag, scheduled ingest, a search tool or MCP server — only when the user asks. A search tool pays for itself past ~50 pages.
 - **`AGENTS.md` is the single source of truth**; most agents (Codex CLI, Gemini CLI, Aider, Zed, Devin, …) read it natively. Claude Code reads `CLAUDE.md`, a pointer whose `@AGENTS.md` import loads this file with the project instructions (no extra Read). For tools that expect another filename (`.cursor/rules/`, `.windsurfrules`, `.github/copilot-instructions.md`), add a similar pointer — never a copy.
